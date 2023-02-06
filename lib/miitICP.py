@@ -23,7 +23,7 @@ class Miit:
         cookie_headers = {'User-Agent': get_user_agent()}
         for i in range(5):
             try:
-                req = requests.get('https://beian.miit.gov.cn/', headers=cookie_headers, timeout=1)
+                req = requests.get('https://beian.miit.gov.cn/', headers=cookie_headers, timeout=5)
                 self.cookie = requests.utils.dict_from_cookiejar(req.cookies)['__jsluid_s']
                 if self.method == 'single':
                     print('[√] 获取 cookie 成功')
@@ -41,7 +41,7 @@ class Miit:
         url = 'https://hlwicpfwc.miit.gov.cn/icpproject_query/api/auth'
         for i in range(5):
             try:
-                t_response = requests.post(url=url, data=auth_data, headers=self.base_header, timeout=1).json()
+                t_response = requests.post(url=url, data=auth_data, headers=self.base_header, timeout=5).json()
                 self.token = t_response['params']['bussiness']
                 if self.method == 'single':
                     print('[√] 获取 token 成功')
@@ -57,7 +57,7 @@ class Miit:
         self.base_header.update({'Content-Length': '0', 'token': self.token})
         for i in range(5):
             try:
-                p_request = requests.post(url=url, data='', headers=self.base_header, timeout=1).json()
+                p_request = requests.post(url=url, data='', headers=self.base_header, timeout=5).json()
                 p_uuid = p_request['params']['uuid']
                 big_image = p_request['params']['bigImage']
                 small_image = p_request['params']['smallImage']
@@ -87,7 +87,7 @@ class Miit:
         self.base_header.update({'Content-Length': '60', 'token': self.token, 'Content-Type': 'application/json'})
         for i in range(5):
             try:
-                pic_sign = requests.post(check_url, json=self.check_data, headers=self.base_header, timeout=1).json()
+                pic_sign = requests.post(check_url, json=self.check_data, headers=self.base_header, timeout=5).json()
                 self.sign = pic_sign['params']
                 if self.method == 'single':
                     print('[√] 自动破解滑块验证码成功')
@@ -106,13 +106,13 @@ class Miit:
         self.base_header.update({'Content-Length': '78', 'uuid': p_uuid, 'token': self.token, 'sign': self.sign})
         # 请求获取备案信息
         try:
-            icp_info = requests.post(url=info_url, json=info_data, headers=self.base_header, proxies=self.proxy, timeout=1).json()
+            icp_info = requests.post(url=info_url, json=info_data, headers=self.base_header, proxies=self.proxy, timeout=5).json()
             while icp_info['code'] == 429:
                 print("[×] 查询失败，{}".format(icp_info["msg"]))
                 is_continue = input('备案查询暂停，可更换IP或代理后输入 c 继续查询，输入其他退出：')
                 if is_continue == 'c':
                     icp_info = requests.post(url=info_url, json=info_data, headers=self.base_header, proxies=self.proxy,
-                                             timeout=1).json()
+                                             timeout=5).json()
                 else:
                     exit()
         except requests.exceptions.ConnectTimeout:
@@ -122,13 +122,13 @@ class Miit:
             for i in range(3):
                 time.sleep(0.5)
                 icp_info = requests.post(
-                    url=info_url, json=info_data, headers=self.base_header, proxies=self.proxy, timeout=2).json()
+                    url=info_url, json=info_data, headers=self.base_header, proxies=self.proxy, timeout=5).json()
                 while icp_info['code'] == 429:
                     print("[×] 查询失败，{}".format(icp_info["msg"]))
                     is_continue = input('备案查询暂停，可更换IP或代理后输入 c 继续查询，输入其他退出：')
                     if is_continue == 'c':
                         icp_info = requests.post(
-                            url=info_url, json=info_data, headers=self.base_header,proxies=self.proxy,timeout=1).json()
+                            url=info_url, json=info_data, headers=self.base_header,proxies=self.proxy,timeout=5).json()
                     else:
                         exit()
         # 处理备案信息
