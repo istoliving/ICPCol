@@ -9,7 +9,7 @@
 	<img src="https://badgen.net/github/issues/OssianSong/ICPCol">
     <a href="https://angesec.com"><img src="https://img.shields.io/badge/blog-@%20%E6%9A%97%E6%A0%BC%E5%AE%89%E5%85%A8-blue.svg?style=social"></a>
 </p>
-
+<br>
 
 
 ## 介绍
@@ -56,7 +56,7 @@ options:
 
 ### 单一查询
 
-通过 `-t` 参数指定查询目标，可以查询**域名**、**IP**和**公司名**，
+通过 `-t` 参数指定查询目标，查询目标可以输入**域名**、**IP**、**公司名**和**备案号**
 
 ```
 python ICPCol.py -t baidu.com
@@ -112,4 +112,4 @@ python ICPCol.py -t baidu.com --third-party
 
 <br>
 
-如果程序运行出现问题或有其他程序优化方案，欢迎在 issue 中指出
+如果程序运行出现问题或有其他程序优化方案，欢迎在`Issue`中指出
