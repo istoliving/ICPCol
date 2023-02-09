@@ -49,7 +49,7 @@ usage: python ICPCol.py [-t TARGET] [-f FILE] [-o [FILENAME]] [-s [SIMPLE_FILE]]
    \ \_\  \ \_____\  \ \_\    \ \_____\  \ \_____\  \ \_____\
     \/_/   \/_____/   \/_/     \/_____/   \/_____/   \/_____/
 
-                        Version：v2.0.0      Author：OssianSong
+                        Version：v2.0.0      Author：Ryan0x01
 
 input:
   -t TARGET           输入公司名/备案号/域名/IP地址 询对应备案信息
