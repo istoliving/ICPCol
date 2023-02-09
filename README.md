@@ -1,6 +1,6 @@
 <h1 align="center">ICPCOL</h1>
 <p align="center">
-    工信部域名备案查询工具，用于渗透过程中收集目标主体备案域名，可用于确认资产归属或收集企业备案资产
+    工信部域名备案查询工具，用于渗透过程中收集目标备案域名，可用于确认资产归属或收集企业备案资产
 </p>
 <p align="center">
     <img src="https://badgen.net/badge/language/python"> 
@@ -9,6 +9,7 @@
 	<img src="https://badgen.net/github/issues/OssianSong/ICPCol">
     <a href="https://angesec.com"><img src="https://img.shields.io/badge/blog-@%20%E6%9A%97%E6%A0%BC%E5%AE%89%E5%85%A8-blue.svg?style=social"></a>
 </p>
+
 
 <br>
 
