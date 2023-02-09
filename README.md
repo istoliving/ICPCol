@@ -1,6 +1,6 @@
 <h1 align="center">ICPCOL</h1>
 <p align="center">
-    工信部域名备案查询工具，可以对单一或批量主体备案信息查询，并支持结果导出
+    工信部域名备案查询工具，用于渗透过程中收集目标主体备案域名，可用于确认资产归属或收集企业备案资产
 </p>
 <p align="center">
     <img src="https://badgen.net/badge/language/python"> 
@@ -9,6 +9,7 @@
 	<img src="https://badgen.net/github/issues/OssianSong/ICPCol">
     <a href="https://angesec.com"><img src="https://img.shields.io/badge/blog-@%20%E6%9A%97%E6%A0%BC%E5%AE%89%E5%85%A8-blue.svg?style=social"></a>
 </p>
+
 <br>
 
 ## 介绍
@@ -82,7 +83,7 @@ python ICPCol.py -t baidu.com
 python ICPCol.py -f targets.txt
 ```
 
-脚本
+脚本运行结果如下，输入域名查询可以确认资产归属于哪个公司，输入公司名查询可以收集该公司所有备案资产
 
 ```
 D:\02-Program\05-Project\Python\ICPCol>python ICPCol.py -t baidu.com
