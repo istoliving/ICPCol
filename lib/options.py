@@ -14,15 +14,21 @@ class Options:
         if args.p:
             self.proxy = {"http": '{}'.format(self.proxy),
                           "https": '{}'.format(self.proxy)}
+        # 是否为非官方备案查询
         self.is_main = not args.third_party
-        if "o" not in args:
+        # 设置输出类型
+        self.out_file = time.strftime('%Y%m%d%H%M%S', time.localtime())
+        if "o" not in args and "s" not in args:
             self.out_type = 'print'
-        elif args.o:
+        elif "o" in args:
             self.out_type = 'excel'
-            self.out_file = args.o
+            if args.o:
+                self.out_file = args.o
         else:
-            self.out_type = 'excel'
-            self.out_file = time.strftime('%Y%m%d%H%M%S', time.localtime())
+            self.out_type = 'txt'
+            if args.s:
+                self.out_file = args.s
+        # 设置查询模式
         if args.t:
             self.method = 'single'
         if args.f:

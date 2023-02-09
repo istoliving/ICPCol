@@ -23,7 +23,7 @@ class Miit:
         cookie_headers = {'User-Agent': get_user_agent()}
         for i in range(5):
             try:
-                req = requests.get('https://beian.miit.gov.cn/', headers=cookie_headers, timeout=5)
+                req = requests.get('https://beian.miit.gov.cn/', headers=cookie_headers, timeout=10)
                 self.cookie = requests.utils.dict_from_cookiejar(req.cookies)['__jsluid_s']
                 if self.method == 'single':
                     print('[√] 获取 cookie 成功')
@@ -41,7 +41,7 @@ class Miit:
         url = 'https://hlwicpfwc.miit.gov.cn/icpproject_query/api/auth'
         for i in range(5):
             try:
-                t_response = requests.post(url=url, data=auth_data, headers=self.base_header, timeout=5).json()
+                t_response = requests.post(url=url, data=auth_data, headers=self.base_header, timeout=10).json()
                 self.token = t_response['params']['bussiness']
                 if self.method == 'single':
                     print('[√] 获取 token 成功')
@@ -57,7 +57,7 @@ class Miit:
         self.base_header.update({'Content-Length': '0', 'token': self.token})
         for i in range(5):
             try:
-                p_request = requests.post(url=url, data='', headers=self.base_header, timeout=5).json()
+                p_request = requests.post(url=url, data='', headers=self.base_header, timeout=10).json()
                 p_uuid = p_request['params']['uuid']
                 big_image = p_request['params']['bigImage']
                 small_image = p_request['params']['smallImage']
@@ -87,7 +87,7 @@ class Miit:
         self.base_header.update({'Content-Length': '60', 'token': self.token, 'Content-Type': 'application/json'})
         for i in range(5):
             try:
-                pic_sign = requests.post(check_url, json=self.check_data, headers=self.base_header, timeout=5).json()
+                pic_sign = requests.post(check_url, json=self.check_data, headers=self.base_header, timeout=10).json()
                 self.sign = pic_sign['params']
                 if self.method == 'single':
                     print('[√] 自动破解滑块验证码成功')
@@ -105,32 +105,31 @@ class Miit:
         info_url = 'https://hlwicpfwc.miit.gov.cn/icpproject_query/api/icpAbbreviateInfo/queryByCondition'
         self.base_header.update({'Content-Length': '78', 'uuid': p_uuid, 'token': self.token, 'sign': self.sign})
         # 请求获取备案信息
-        try:
-            icp_info = requests.post(url=info_url, json=info_data, headers=self.base_header, proxies=self.proxy, timeout=5).json()
-            while icp_info['code'] == 429:
-                print("[×] 查询失败，{}".format(icp_info["msg"]))
-                is_continue = input('备案查询暂停，可更换IP或代理后输入 c 继续查询，输入其他退出：')
-                if is_continue == 'c':
-                    icp_info = requests.post(url=info_url, json=info_data, headers=self.base_header, proxies=self.proxy,
-                                             timeout=5).json()
-                else:
-                    exit()
-        except requests.exceptions.ConnectTimeout:
-            print("连接超时，请检查网络或代理设置！")
-            exit()
-        except Exception:
-            for i in range(3):
-                time.sleep(0.5)
-                icp_info = requests.post(
-                    url=info_url, json=info_data, headers=self.base_header, proxies=self.proxy, timeout=5).json()
-                while icp_info['code'] == 429:
+        retry_count = 1
+        is_continue = 'c'
+        if self.proxy:
+            print('[√] 正在使用代理地址进行查询')
+        while is_continue == 'c':
+            if retry_count > 3:
+                print('查询备案失败，请检查网络状况后重试！')
+                break
+            try:
+                icp_info = requests.post(url=info_url, json=info_data, headers=self.base_header,
+                                         proxies=self.proxy, timeout=15).json()
+                if icp_info['code'] == 429:
                     print("[×] 查询失败，{}".format(icp_info["msg"]))
                     is_continue = input('备案查询暂停，可更换IP或代理后输入 c 继续查询，输入其他退出：')
                     if is_continue == 'c':
-                        icp_info = requests.post(
-                            url=info_url, json=info_data, headers=self.base_header,proxies=self.proxy,timeout=5).json()
+                        continue
                     else:
                         exit()
+                break
+            except requests.exceptions.ConnectTimeout:
+                raise
+            except Exception:
+                print("连接超时，正在进行第 {} 次重试...".format(retry_count))
+                retry_count += 1
+                time.sleep(0.5)
         # 处理备案信息
         info = info_data['unitName']
         domain_total = icp_info['params']['total']

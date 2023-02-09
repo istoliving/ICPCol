@@ -1,8 +1,19 @@
 import os
+import re
 
 import openpyxl as xl
 from openpyxl.styles import Alignment
 from prettytable import PrettyTable
+
+
+def is_valid_ip(ip):
+    """
+    验证字符串是否为IP地址
+    """
+    pattern = re.compile(r"^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$")
+    if pattern.match(ip):
+        return True
+    return False
 
 
 def save_to_excel(domain_list, file_name):
@@ -65,6 +76,33 @@ def print_table(domain_list):
     if len(domain_list) == 0:
         return
     table = PrettyTable(['域名主办方', '网站备案号', '域名', '域名类型', '审批项', '限制接入', '备案日期'])
-    for list in domain_list:
-        table.add_row([list[0], list[3], list[1], list[4], list[5], list[6], list[7].split(" ")[0]])
+    for data in domain_list:
+        table.add_row([data[0], data[3], data[1], data[4], data[5], data[6], data[7].split(" ")[0]])
     print(table)
+
+
+def save_to_txt(domain_list, file_name):
+    """
+    将查询结果保存到txt文件中
+    :param domain_list:
+    :param file_name:
+    :return:
+    """
+    if len(domain_list) == 0:
+        print("查询结果为空")
+        return
+    print(domain_list)
+    ext = file_name.split(".")[-1]
+    if ext == "txt":
+        file_name = file_name.replace(".txt", "")
+    # 判断文件保存路径是否存在，如果不存在则创建
+    if not os.path.exists("out"):
+        os.mkdir("out")
+    file_path = "out/{}.txt".format(file_name)
+    with open(file_path, 'a', encoding='utf-8') as f:
+        for data in domain_list:
+            if is_valid_ip(data[1]):
+                f.write('ip="{}"\n'.format(data[1]))
+            else:
+                f.write('domain="{}"\n'.format(data[1]))
+    print("查询语法保存在：{}".format(file_path))

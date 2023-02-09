@@ -3,7 +3,7 @@ from lib.beianxICP import BeianX
 from lib.cmdline import cmdline
 from lib.miitICP import Miit
 from lib.options import Options
-from lib.output import save_to_excel, print_table
+from lib.output import save_to_excel, print_table, save_to_txt
 
 
 if __name__ == '__main__':
@@ -19,8 +19,10 @@ if __name__ == '__main__':
         domain_list = icp.query(args.target)
         if args.out_type == 'print':
             print_table(domain_list)
+        elif args.out_type == 'excel':
+            save_to_excel(domain_list, args.out_file)
         else:
-            save_to_excel(domain_list, args.filename)
+            save_to_txt(domain_list, args.out_file)
     # 多个查询
     elif args.filename:
         try:
@@ -33,8 +35,10 @@ if __name__ == '__main__':
                     # 对输出结果进行处理
                     if args.out_type == 'print':
                         print_table(domain_list)
+                    elif args.out_type == 'excel':
+                        save_to_excel(domain_list, args.filename)
                     else:
-                        save_to_excel(domain_list, args.out_file)
+                        save_to_txt(domain_list, args.filename)
         except Exception as e:
             print(e)
             print("[×] 打开文件不存在，请确认文件位置！")
